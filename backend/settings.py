@@ -16,18 +16,20 @@ SUPABASE_URL = os.getenv("SUPABASE_URL", "https://dcssjbdtwofaaiyyfzit.supabase.
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "<your-key>")
 SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "avatars")
 
-# DATABASE
+import os
+import dj_database_url
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DB_NAME", "postgres"),
-        "USER": os.getenv("DB_USER", "postgres"),
-        "PASSWORD": os.getenv("DB_PASSWORD", "Deanambrose@12345"),
-        "HOST": os.getenv("DB_HOST", "db.dcssjbdtwofaaiyyfzit.supabase.co"),
-        "PORT": os.getenv("DB_PORT", "5432"),
-        # Remove 'driver' option entirely
-    }
+    "default": dj_database_url.parse(
+        os.environ.get(
+            "DATABASE_URL",
+            "postgresql://postgres:Deanambrose%4012345@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres"
+        ),
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
+
 
 # MEDIA (user uploads like avatars)
 MEDIA_URL = "/media/"
