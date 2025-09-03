@@ -1,1 +1,12 @@
+channels==4.3.1
+dj_database_url==3.0.1
+Django==5.2.5
+djangorestframework==3.16.1
+djangorestframework_simplejwt==5.5.1
+python-dotenv==1.1.1
+supabase==2.18.1
+django-cors-headers==4.4.0
+gunicorn==21.2.0
+uvicorn==0.30.1
+
 
