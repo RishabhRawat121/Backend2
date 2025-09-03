@@ -10,5 +10,6 @@ gunicorn==21.2.0
 uvicorn==0.30.1
 psycopg2-binary==2.9.7
 psycopg==3.2.1
+Pillow==10.0.0
 
 
