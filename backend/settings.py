@@ -15,10 +15,6 @@ ALLOWED_HOSTS = ["*"]  # For development only
 SUPABASE_URL = os.getenv("SUPABASE_URL", "https://dcssjbdtwofaaiyyfzit.supabase.co")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "<your-key>")
 SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "avatars")
-
-import os
-import dj_database_url
-
 DATABASES = {
     "default": dj_database_url.parse(
         os.environ.get(
