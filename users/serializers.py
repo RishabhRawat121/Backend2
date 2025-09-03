@@ -41,13 +41,13 @@ class RegisterSerializer(serializers.ModelSerializer):
 # --------------------------
 # Login Serializer
 # --------------------------
-from rest_framework import serializers
 from django.contrib.auth import authenticate, get_user_model
+from rest_framework import serializers
 
 User = get_user_model()
 
 class LoginSerializer(serializers.Serializer):
-    identifier = serializers.CharField()
+    identifier = serializers.CharField()  # username or email
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
@@ -55,27 +55,27 @@ class LoginSerializer(serializers.Serializer):
         password = data.get("password")
 
         if not identifier:
-            raise serializers.ValidationError("Username or email is required")
+            raise serializers.ValidationError({"identifier": "Username or email is required"})
         if not password:
-            raise serializers.ValidationError("Password is required")
+            raise serializers.ValidationError({"password": "Password is required"})
 
-        # Check if identifier is an email or username
         user = None
-        if "@" in identifier:  # looks like email
-            try:
-                user_obj = User.objects.get(email=identifier)
+
+        # 1️⃣ Try login with username first
+        user = authenticate(username=identifier, password=password)
+
+        # 2️⃣ If username login fails, try email login
+        if not user and "@" in identifier:
+            users = User.objects.filter(email=identifier, is_active=True)
+            if users.exists():
+                # Pick the first active user
+                user_obj = users.first()
                 user = authenticate(username=user_obj.username, password=password)
-            except User.DoesNotExist:
-                pass
-        else:
-            user = authenticate(username=identifier, password=password)
 
         if not user:
-            raise serializers.ValidationError("Invalid credentials")
-        if not user.is_active:
-            raise serializers.ValidationError("User account is disabled")
+            raise serializers.ValidationError({"detail": "Invalid credentials"})
 
-        data["user"] = user
+        data['user'] = user
         return data
 
 # --------------------------
