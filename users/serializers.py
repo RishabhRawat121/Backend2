@@ -41,8 +41,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 # --------------------------
 # Login Serializer
 # --------------------------
-from django.contrib.auth import authenticate
-from django.contrib.auth import get_user_model
+from rest_framework import serializers
+from django.contrib.auth import authenticate, get_user_model
 
 User = get_user_model()
 
@@ -51,35 +51,31 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
-        username = data.get("username")
-        email = data.get("email")
+        identifier = data.get("identifier")
         password = data.get("password")
 
-        if not username and not email:
+        if not identifier:
             raise serializers.ValidationError("Username or email is required")
-        
         if not password:
             raise serializers.ValidationError("Password is required")
-        
-        # Authenticate user
+
+        # Check if identifier is an email or username
         user = None
-        
-        if username:
-            user = authenticate(username=username, password=password)
-        elif email:
+        if "@" in identifier:  # looks like email
             try:
-                user_obj = User.objects.get(email=email)
+                user_obj = User.objects.get(email=identifier)
                 user = authenticate(username=user_obj.username, password=password)
             except User.DoesNotExist:
                 pass
-        
+        else:
+            user = authenticate(username=identifier, password=password)
+
         if not user:
             raise serializers.ValidationError("Invalid credentials")
-        
         if not user.is_active:
             raise serializers.ValidationError("User account is disabled")
-        
-        data['user'] = user
+
+        data["user"] = user
         return data
 
 # --------------------------
