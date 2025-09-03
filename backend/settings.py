@@ -25,9 +25,7 @@ DATABASES = {
         "PASSWORD": os.getenv("DB_PASSWORD", "Deanambrose@12345"),
         "HOST": os.getenv("DB_HOST", "db.dcssjbdtwofaaiyyfzit.supabase.co"),
         "PORT": os.getenv("DB_PORT", "5432"),
-        'OPTIONS': {
-            'driver': 'psycopg',  # optional for psycopg 3
-        }
+        # Remove 'driver' option entirely
     }
 }
 
