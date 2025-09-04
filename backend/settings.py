@@ -22,12 +22,12 @@ import dj_database_url
 
 DATABASES = {
     "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
-        conn_max_age=60,
-        ssl_require=True,
-        engine="django.db.backends.postgresql"
+        default=os.environ.get("DATABASE_URL"),  # should be like postgres://user:pass@db-host:5432/dbname
+        conn_max_age=600,  # reuse connections
+        ssl_require=True   # Render/Postgres typically requires SSL
     )
 }
+
 
 # Force IPv4 via OPTIONS if needed
 DATABASES["default"]["OPTIONS"] = {
@@ -149,7 +149,7 @@ USE_I18N = True
 USE_TZ = True
 
 # Channels
-ASGI_APPLICATION = 'yourproject.asgi.application'
+ASGI_APPLICATION = 'backend.asgi.application'
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
