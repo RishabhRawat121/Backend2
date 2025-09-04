@@ -17,34 +17,22 @@ SUPABASE_URL = os.getenv("SUPABASE_URL", "https://dcssjbdtwofaaiyyfzit.supabase.
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "<your-key>")
 SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "avatars")
 
-import dj_database_url
 import os
+import dj_database_url
 
 DATABASES = {
     "default": dj_database_url.config(
         default=os.environ.get("DATABASE_URL"),
         conn_max_age=60,
-        ssl_require=True
+        ssl_require=True,
+        engine="django.db.backends.postgresql"
     )
 }
 
-# Force psycopg to use IPv4
+# Force IPv4 via OPTIONS if needed
 DATABASES["default"]["OPTIONS"] = {
     "options": "-c inet_family=4"
 }
-
-
-
-import socket
-import psycopg
-
-# Force IPv4 for psycopg
-psycopg.connect = lambda *args, **kwargs: psycopg.Connection.connect(
-    *args, **{**kwargs, "target_session_attrs": "prefer-standby", "options": "-c inet6=off"}
-)
-
-
-
 # MEDIA (user uploads like avatars)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
