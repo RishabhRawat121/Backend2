@@ -23,6 +23,8 @@ from dotenv import load_dotenv
 
 load_dotenv()  # Load .env variables
 
+import psycopg
+
 DATABASES = {
     "default": dj_database_url.config(
         default=os.environ.get("DATABASE_URL"),
@@ -31,10 +33,15 @@ DATABASES = {
     )
 }
 
-# Force psycopg to use IPv4
+# Force IPv4 by patching psycopg connection
+def force_ipv4(dsn, **kwargs):
+    return psycopg.connect(dsn, **kwargs, target_session_attrs="read-write", options="-c inet_family=4")
+
+DATABASES["default"]["ENGINE"] = "django.db.backends.postgresql"
 DATABASES["default"]["OPTIONS"] = {
-    "options": "-c inet_family=4"
+    "connection_factory": force_ipv4,
 }
+
 
 
 
