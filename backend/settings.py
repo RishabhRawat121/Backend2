@@ -33,14 +33,6 @@ DATABASES = {
     )
 }
 
-# Force IPv4 by patching psycopg connection
-def force_ipv4(dsn, **kwargs):
-    return psycopg.connect(dsn, **kwargs, target_session_attrs="read-write", options="-c inet_family=4")
-
-DATABASES["default"]["ENGINE"] = "django.db.backends.postgresql"
-DATABASES["default"]["OPTIONS"] = {
-    "connection_factory": force_ipv4,
-}
 
 import socket
 import psycopg
