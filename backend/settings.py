@@ -31,6 +31,11 @@ DATABASES = {
     )
 }
 
+# Force psycopg to use IPv4
+DATABASES["default"]["OPTIONS"] = {
+    "options": "-c inet_family=4"
+}
+
 
 
 # MEDIA (user uploads like avatars)
