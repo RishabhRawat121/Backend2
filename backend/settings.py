@@ -17,13 +17,8 @@ SUPABASE_URL = os.getenv("SUPABASE_URL", "https://dcssjbdtwofaaiyyfzit.supabase.
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "<your-key>")
 SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "avatars")
 
-import os
 import dj_database_url
-from dotenv import load_dotenv
-
-load_dotenv()  # Load .env variables
-
-import psycopg
+import os
 
 DATABASES = {
     "default": dj_database_url.config(
@@ -32,6 +27,12 @@ DATABASES = {
         ssl_require=True
     )
 }
+
+# Force psycopg to use IPv4
+DATABASES["default"]["OPTIONS"] = {
+    "options": "-c inet_family=4"
+}
+
 
 
 import socket
