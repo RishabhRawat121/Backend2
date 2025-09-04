@@ -34,7 +34,7 @@ class PostListCreateView(generics.ListCreateAPIView):
                 raise Exception(f"Supabase upload failed: {result['error']}")
 
             # Get public URL
-            image_url = supabase.storage.from_("post-images").get_public_url(filename).get("publicUrl")
+            image_url = supabase.storage.from_("Avatar").get_public_url(filename).get("publicUrl")
 
         serializer.save(author=self.request.user, image=image_url)
 
