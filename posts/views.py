@@ -7,6 +7,7 @@ from .models import Post, Comment, Like, Notification
 from .serializers import PostSerializer, CommentSerializer, NotificationSerializer
 
 # ----------------- Posts -----------------
+
 class PostListCreateView(generics.ListCreateAPIView):
     queryset = Post.objects.all().select_related("author").prefetch_related("likes", "comments__author")
     serializer_class = PostSerializer
@@ -19,7 +20,23 @@ class PostListCreateView(generics.ListCreateAPIView):
         return ctx
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        image_file = self.request.FILES.get("image")
+        image_url = None
+
+        if image_file:
+            # Unique filename
+            ext = image_file.name.split(".")[-1]
+            filename = f"posts/{uuid.uuid4()}.{ext}"
+
+            # Upload to Supabase bucket named "post-images"
+            result = supabase.storage.from_("post-images").upload(filename, image_file.read())
+            if result.get("error"):
+                raise Exception(f"Supabase upload failed: {result['error']}")
+
+            # Get public URL
+            image_url = supabase.storage.from_("post-images").get_public_url(filename).get("publicUrl")
+
+        serializer.save(author=self.request.user, image=image_url)
 
 # ----------------- Likes -----------------
 class PostLikeToggleView(APIView):
