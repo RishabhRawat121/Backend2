@@ -17,16 +17,20 @@ SUPABASE_URL = os.getenv("SUPABASE_URL", "https://dcssjbdtwofaaiyyfzit.supabase.
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "<your-key>")
 SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "avatars")
 
+import os
+import dj_database_url
+from dotenv import load_dotenv
+
+load_dotenv()  # Load .env variables
+
 DATABASES = {
-    "default": dj_database_url.parse(
-        os.environ.get(
-            "DATABASE_URL",
-            "postgresql://postgres:Deanambrose%4012345@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres"
-        ),
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL"),
         conn_max_age=60,
         ssl_require=True
     )
 }
+
 
 
 # MEDIA (user uploads like avatars)
