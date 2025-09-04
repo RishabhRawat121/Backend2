@@ -22,7 +22,7 @@ DATABASES = {
             "DATABASE_URL",
             "postgresql://postgres:Deanambrose%4012345@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres"
         ),
-        conn_max_age=600,
+        'CONN_MAX_AGE': 60,
         ssl_require=True
     )
 }
