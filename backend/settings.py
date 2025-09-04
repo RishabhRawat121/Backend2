@@ -21,12 +21,13 @@ import os
 import dj_database_url
 
 DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),  # should be like postgres://user:pass@db-host:5432/dbname
-        conn_max_age=600,  # reuse connections
-        ssl_require=True   # Render/Postgres typically requires SSL
+    "default": dj_database_url.parse(
+        os.environ.get("DATABASE_URL", "postgresql://postgres:Deanambrose%4012345@db.dcssjbdtwofaaiyyfzit.supabase.co:5432/postgres?sslmode=require"),
+        conn_max_age=600,
+        ssl_require=True
     )
 }
+
 
 
 # Force IPv4 via OPTIONS if needed
