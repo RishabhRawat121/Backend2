@@ -42,6 +42,13 @@ DATABASES["default"]["OPTIONS"] = {
     "connection_factory": force_ipv4,
 }
 
+import socket
+import psycopg
+
+# Force IPv4 for psycopg
+psycopg.connect = lambda *args, **kwargs: psycopg.Connection.connect(
+    *args, **{**kwargs, "target_session_attrs": "prefer-standby", "options": "-c inet6=off"}
+)
 
 
 
