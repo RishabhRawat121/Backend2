@@ -16,13 +16,14 @@ ALLOWED_HOSTS = ["*"]  # For development only
 SUPABASE_URL = os.getenv("SUPABASE_URL", "https://dcssjbdtwofaaiyyfzit.supabase.co")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "<your-key>")
 SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "avatars")
+
 DATABASES = {
     "default": dj_database_url.parse(
         os.environ.get(
             "DATABASE_URL",
             "postgresql://postgres:Deanambrose%4012345@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres"
         ),
-        'CONN_MAX_AGE': 60,
+        conn_max_age=60,
         ssl_require=True
     )
 }
